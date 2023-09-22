@@ -35,3 +35,5 @@ bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 8. naiba大佬的哪吒探针 - [项目地址](https://github.com/naiba/nezha)
 9. fscarmen大佬的warp管理脚本 - [项目地址](https://gitlab.com/fscarmen/warp)
 10. ilemonrain大佬的html5 speed test - [项目地址](https://hub.docker.com/r/ilemonrain/html5-speedtest/#!)
+## 交流
+[阿方的测评](https://t.me/afangcp)
