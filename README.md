@@ -28,7 +28,7 @@ bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 - Docker管理  
 ![image](https://github.com/aafang/afbox/assets/145802153/913e7f31-adf1-44eb-91c5-5b5111d1b4f1)
 - QuickBox Lite 安装  
-![image](https://github.com/aafang/afbox/assets/145802153/14e3a729-2b11-4fea-b494-487a88ab1254)
+![image](https://github.com/aafang/afbox/assets/145802153/ae784ba2-4f24-414a-8fd9-8a57e0f7f32f)
 - 其他
 哪吒探针，warp，html5 speedtest，Alist均是调用了其他脚本，故不作展示
 ## 鸣谢
