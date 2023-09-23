@@ -1,4 +1,5 @@
 #!/bin/bash
+# 如有侵权，请联系admin@fxzhuji.com删除
 Font_Black="\033[30m"
 Font_Red="\033[31m"
 Font_Green="\033[32m"
@@ -24,13 +25,13 @@ function bbr_m(){
 	while true
 	do
 		clear
-		echo "***********************************"
-		echo "            BBR加速管理"
-		echo "***********************************"
+		echo "-------------------------------------------"
+		echo " BBR加速管理"
+		echo "-------------------------------------------"
 		echo "1、卸载内核版"
 		echo "2、不卸载内核版"
 		echo "0、返回主菜单"
-		echo "***********************************"
+		echo "-------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -61,9 +62,9 @@ function test_m(){
 	while true
 	do
 		clear
-		echo "***********************************"
-		echo "           服务器各项测试"
-		echo "***********************************"
+		echo "-------------------------------------------"
+		echo " 服务器各项测试"
+		echo "-------------------------------------------"
 		echo "1、服务器基本信息 By yabs.sh"
 		echo "2、流媒体解锁测试 By lmc999"
 		echo "3、服务器带宽测试 By i-abc"
@@ -73,7 +74,7 @@ function test_m(){
 		echo "7、服务器CPU跑分 By yabs.sh"
 		echo "8、NodeBench一键测评 By 酒神"
 		echo "0、返回主菜单"
-		echo "***********************************"
+		echo "-------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -135,14 +136,14 @@ function docker_m(){
 	while true
 	do
 		clear
-		echo "***********************************"
-		echo "            Docker管理"
-		echo "***********************************"
+		echo "-------------------------------------------"
+		echo "Docker管理"
+		echo "-------------------------------------------"
 		echo "1、安装Docker"
 		echo "2、安装Docker-compose"
 		echo "3、Docker容器管理"
 		echo "0、返回主菜单"
-		echo "***********************************"
+		echo "-------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -260,18 +261,57 @@ function htm5_s(){
 	fi
 }
 
+function ptbox_m(){
+		clear
+		echo "-------------------------------------------"
+		echo "QuickBox Lite安装"
+		echo "-------------------------------------------"
+		echo -n "用户名(默认Admin)："
+		read username
+		if [ -z "$username" ];then
+			username="Admin"
+		fi
+		echo -n "密码(默认Admin123)："
+		read password
+		if [ -z "$password" ];then
+			password="Admin123"
+		fi
+		echo -n "SSH端口密码(默认22)："
+		read ssh_port
+		if [ -z "$ssh_port" ];then
+			ssh_port="22"
+		fi
+		echo -n "安装后自动重启？ [Y/N]："
+		read answer1
+		case $answer1 in
+			[yY] )
+				arg1="--reboot"
+			;;
+			* )
+				arg1=""
+			;;
+		esac
+		echo "开始安装……"
+		bash <(wget -qO- https://git.io/qbox-lite -o /dev/null) -u ${username} -p ${password} --with-ffmpeg -P ${ssh_port} --with-deluge --with-mktorrent --with-linuxrar --with-cf --hostname vmserver ${arg1}
+}
+
+
 function menu(){
 	clear
-	echo "***********************************"
-	echo "    Af_Box 常用脚本工具箱 v0.0.1"
-	echo "***********************************"
+	echo "-------------------------------------------"
+	echo "Af_Box 常用脚本工具箱 v0.0.2"
+	echo "-------------------------------------------"
 	echo "1、BBR加速管理 By blog.ylx.me"
 	echo "2、服务器各项测试"
 	echo "3、Docker管理"
 	echo "4、哪吒探针管理 By naiba"
 	echo "5、Warp管理 By fscarmen"
 	echo "6、Html5 Speedtest 安装"
-	echo "***********************************"
+	echo "7、Alist 安装"
+	echo "8、QuickBox Lite（PT盒子） 安装"
+	echo "-------------------------------------------"
+	echo "若中途有输入错误，按ctrl+backpace删除"
+	echo "-------------------------------------------"
 }
 
 
@@ -297,6 +337,10 @@ do
      5)  warp_m
      ;;
      6)  htm5_s
+     ;;
+     7)  curl -fsSL "https://alist.nn.ci/v2.sh" | bash -s install
+     ;;
+     8)  ptbox_m
      ;;
      0)  echo "用户选择退出"
 	     break
