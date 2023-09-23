@@ -276,7 +276,7 @@ function ptbox_m(){
 		if [ -z "$password" ];then
 			password="Admin123"
 		fi
-		echo -n "SSH端口密码(默认22)："
+		echo -n "SSH端口(默认22)："
 		read ssh_port
 		if [ -z "$ssh_port" ];then
 			ssh_port="22"
