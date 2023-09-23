@@ -9,21 +9,28 @@
 4. 哪吒探针管理
 5. Warp的管理
 6. 一键安装html5 speedtest
+7. 一键安装Alist
+8. 一键安装QuickBox Lite
 ## 使用
 ```
 bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 ```
+## 更新日志
+- 2023年9月24日：增加alist，QuickBox Lite
+- 2023年9月23日：首个版本发布
 ## 基本界面展示
 - 主菜单  
-![image](https://github.com/aafang/afbox/assets/145802153/a6398555-9a27-4084-ae34-09bcd90a2f20)
+![image](https://github.com/aafang/afbox/assets/145802153/f0e0a4c5-fe45-4561-84b4-bae718f42b2e)
 - BB加速管理  
-![image](https://github.com/aafang/afbox/assets/145802153/ec03ac72-f58b-4769-b372-9b09eb54ea8c)
+![image](https://github.com/aafang/afbox/assets/145802153/1cdf8044-f52b-4d6a-93ad-999ed95e1b4d)
 - 服务器各项测试  
-![image](https://github.com/aafang/afbox/assets/145802153/7308a2e3-34cb-4020-98c6-14df25da5476)
+![image](https://github.com/aafang/afbox/assets/145802153/cf33f8ec-210d-49de-b171-08bbf3183008)
 - Docker管理  
-![image](https://github.com/aafang/afbox/assets/145802153/fce04cd7-f8ab-4f53-817b-51b20f5db097)  
+![image](https://github.com/aafang/afbox/assets/145802153/913e7f31-adf1-44eb-91c5-5b5111d1b4f1)
+- QuickBox Lite 安装  
+![image](https://github.com/aafang/afbox/assets/145802153/14e3a729-2b11-4fea-b494-487a88ab1254)
 - 其他
-哪吒探针，warp，html5 speedtest均是调用了其他脚本，故不作展示
+哪吒探针，warp，html5 speedtest，Alist均是调用了其他脚本，故不作展示
 ## 鸣谢
 感谢以下大佬贡献的脚本，排名不分先后。  
 1. HJM大佬的BBR脚本 - [项目地址](https://blog.ylx.me/archives/783.html)
@@ -36,5 +43,7 @@ bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 8. naiba大佬的哪吒探针 - [项目地址](https://github.com/naiba/nezha)
 9. fscarmen大佬的warp管理脚本 - [项目地址](https://gitlab.com/fscarmen/warp)
 10. ilemonrain大佬的html5 speed test - [项目地址](https://hub.docker.com/r/ilemonrain/html5-speedtest/#!)
+11. Alist - [项目地址](https://github.com/alist-org/alist)
+12. QuickBox Lite - [项目地址](https://wiki.ptbox.dev/zh-Hans/)
 ## 交流
 [阿方的测评](https://t.me/afangcp)
