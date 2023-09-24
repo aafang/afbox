@@ -1,5 +1,4 @@
 #!/bin/bash
-# 如有侵权，请联系admin@fxzhuji.com删除
 Font_Black="\033[30m"
 Font_Red="\033[31m"
 Font_Green="\033[32m"
@@ -9,6 +8,30 @@ Font_Purple="\033[35m"
 Font_SkyBlue="\033[36m"
 Font_White="\033[37m"
 Font_Suffix="\033[0m"
+
+# from bbr脚本
+function check_sys(){
+	  if [[ -f /etc/redhat-release ]]; then
+	    release="centos"
+	  elif grep -qi "debian" /etc/issue; then
+	    release="debian"
+	  elif grep -qi "ubuntu" /etc/issue; then
+	    release="ubuntu"
+	  elif grep -qi -E "centos|red hat|redhat" /etc/issue || grep -qi -E "centos|red hat|redhat" /proc/version; then
+	    release="centos"
+	  fi
+	
+	  if [[ -f /etc/debian_version ]]; then
+	    OS_type="Debian"
+	    echo "检测为Debian通用系统，判断有误请反馈"
+	  elif [[ -f /etc/redhat-release || -f /etc/centos-release || -f /etc/fedora-release ]]; then
+	    OS_type="CentOS"
+	    echo "检测为CentOS通用系统，判断有误请反馈"
+	  else
+	    echo "Unknown"
+	  fi
+	  sleep 2
+}
 
 function get_char()
 {
@@ -53,6 +76,9 @@ function bbr_m(){
 	     ;;
 	     0)
 	     	break
+     	;;
+     	*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     		sleep 2
      	;;
      	esac
      done
@@ -117,6 +143,9 @@ function test_m(){
 	     ;;
 	     0)
 	     	break
+     	;;
+     	*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     	sleep 2
      	;;
      	esac
      done
@@ -222,12 +251,18 @@ function docker_m(){
 					;;
 					esac
 				;;
+				*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     				sleep 2
+     			;;
 				esac
 			fi
 			
 	     ;;
 	     0)
 	     	break
+     	;;
+     	*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     	sleep 2
      	;;
      	esac
      done
@@ -276,7 +311,7 @@ function ptbox_m(){
 		if [ -z "$password" ];then
 			password="Admin123"
 		fi
-		echo -n "SSH端口(默认22)："
+		echo -n "SSH端口密码(默认22)："
 		read ssh_port
 		if [ -z "$ssh_port" ];then
 			ssh_port="22"
@@ -293,13 +328,92 @@ function ptbox_m(){
 		esac
 		echo "开始安装……"
 		bash <(wget -qO- https://git.io/qbox-lite -o /dev/null) -u ${username} -p ${password} --with-ffmpeg -P ${ssh_port} --with-deluge --with-mktorrent --with-linuxrar --with-cf --hostname vmserver ${arg1}
+		echo "安装完成，按任意键继续!"
+		char=`get_char`
+}
+
+function speed_limit(){
+	clear
+	echo "-------------------------------------------"
+	echo "网卡限速管理"
+	echo "-------------------------------------------"
+	echo "1、安装限速和监控插件"
+	echo "2、设置网卡限速"
+	echo "3、取消网卡限速"
+	echo "4、查看网卡监控"
+	echo "0、返回主菜单"
+	echo "-------------------------------------------"
+	echo -n "请选择："
+	read aNum2
+	case $aNum2 in
+	1)
+	case $OS_type in
+	    Debian)
+	        apt-get update
+	        sudo apt-get install make ethstatus
+	        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
+	        ln /usr/local/sbin/wondershaper /sbin/wondershaper
+	        echo "安装完成，按任意键继续!"
+		   char=`get_char`
+	        ;;
+	    CentOS)
+	        sudo yum install epel-release make ethstatus
+	        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
+	        echo "安装完成，按任意键继续!"
+		   char=`get_char`
+	        ;;
+	    *)
+	        echo "不支持此系统请尝试手动安装 wondershaper"
+	        ;;
+	esac
+	;;
+	2) echo "-------------------------------------------"
+		echo -n "网卡名称："
+		read dev_name
+		echo -n "上行速率(kbps，留空不限制)："
+		read up_speed
+		echo -n "下线速率(kbps，留空不限制)："
+		read down_speed
+		systemctl enable wondershaper.service
+		wondershaper -c -a ${dev_name}
+		if [ -n "$up_speed" ] && [ -n "$down_speed" ];then
+			wondershaper -a ${dev_name} -d ${down_speed} -u ${up_speed}
+		elif [ -n "$up_speed" ];then
+			wondershaper -a ${dev_name} -u ${up_speed}
+		elif [ -n "$up_speed" ];then
+			wondershaper -a ${dev_name} -d ${down_speed}
+		else
+			echo "无限速"
+		fi
+		echo "限速完成。按任意键继续"
+		char=`get_char`
+	;;
+	3) echo "-------------------------------------------"
+		echo -n "网卡名称："
+		read dev_name
+		wondershaper -c -a ${dev_name}
+		systemctl disable wondershaper.service
+		echo "取消限速完成。按任意键继续"
+		char=`get_char`
+	;; 
+	4) echo "-------------------------------------------"
+		echo -n "网卡名称："
+		read dev_name
+		ethstatus -i ${dev_name}
+	;;
+	0) break
+	;;
+	*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     	sleep 2
+     ;;
+	esac
 }
 
 
 function menu(){
 	clear
 	echo "-------------------------------------------"
-	echo "Af_Box 常用脚本工具箱 v0.0.2"
+	echo "Af_Box 常用脚本工具箱 v0.0.3"
 	echo "-------------------------------------------"
 	echo "1、BBR加速管理 By blog.ylx.me"
 	echo "2、服务器各项测试"
@@ -309,12 +423,16 @@ function menu(){
 	echo "6、Html5 Speedtest 安装"
 	echo "7、Alist 安装"
 	echo "8、QuickBox Lite（PT盒子） 安装"
+	echo "9、网卡限速管理"
+	echo "0、退出脚本"
 	echo "-------------------------------------------"
-	echo "若中途有输入错误，按ctrl+backpace删除"
+	echo "若中途有输入错误，按ctrl+backspace删除"
 	echo "-------------------------------------------"
 }
 
-
+# ====================================================
+check_sys
+[[ "${OS_type}" == "Debian" ]] && [[ "${OS_type}" == "CentOS" ]] && echo -e "本脚本不支持当前系统" && exit 1
 if [ ! -d "/etc/afbox/" ];then
   mkdir /etc/afbox/
 else
@@ -341,6 +459,8 @@ do
      7)  curl -fsSL "https://alist.nn.ci/v2.sh" | bash -s install
      ;;
      8)  ptbox_m
+     ;;
+     9) speed_limit
      ;;
      0)  echo "用户选择退出"
 	     break
