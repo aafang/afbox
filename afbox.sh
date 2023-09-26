@@ -48,13 +48,13 @@ function bbr_m(){
 	while true
 	do
 		clear
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo " BBR加速管理"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo "1、卸载内核版"
 		echo "2、不卸载内核版"
 		echo "0、返回主菜单"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -88,9 +88,9 @@ function test_m(){
 	while true
 	do
 		clear
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo " 服务器各项测试"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo "1、服务器基本信息 By yabs.sh"
 		echo "2、流媒体解锁测试 By lmc999"
 		echo "3、服务器带宽测试 By i-abc"
@@ -100,7 +100,7 @@ function test_m(){
 		echo "7、服务器CPU跑分 By yabs.sh"
 		echo "8、NodeBench一键测评 By 酒神"
 		echo "0、返回主菜单"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -165,14 +165,15 @@ function docker_m(){
 	while true
 	do
 		clear
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo "Docker管理"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo "1、安装Docker"
 		echo "2、安装Docker-compose"
 		echo "3、Docker容器管理"
+		echo "4、Docker镜像管理"
 		echo "0、返回主菜单"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo -n "请选择："
 		read aNum2
 		case $aNum2 in
@@ -258,6 +259,52 @@ function docker_m(){
 			fi
 			
 	     ;;
+	     4)  echo "以下是您的镜像列表"
+			ids=($(docker images --format "{{.ID}}"))
+			repos=($(docker images --format "{{.Repository}}"))
+			tags=($(docker images --format "{{.Tag}}"))
+			sizes=($(docker images --format "{{.Size}}"))
+			
+			image_count=${#ids[@]}
+			printf "%-4s %-16s %-24s %-16s %s\n" "ID" "IMAGE ID" "REPOSITORY" "TAG" "SIZE"
+			for ((i=0; i<$image_count; i++)); do
+			   printf "%-4s %-16s %-24s %-16s %s\n" \
+			         "${i}" \
+			         "${ids[$i]}" \
+			         "${repos[$i]}" \
+			         "${tags[$i]}" \
+			         "${sizes[$i]}"
+			done
+			
+			echo -n "请输入您要操作的镜像ID："
+			read img_id
+			image_id=${ids[$img_id]}
+			
+			echo -n "请选择操作：(b)uild 或者 (d)elete "
+			read operation
+			
+			case $operation in
+			    "b" | "B" | "build" | "Build")
+			        echo "请输入构建配置文件路径（例如：Dockerfile）："
+			        read docker_file
+			        echo "请输入构建上下文路径（例如：.表示当前目录）："
+			        read context_path
+			        echo "请输入目标镜像名称（例如：myimage:v1）："
+			        read image_name
+			        docker build -t $image_name -f $docker_file $context_path
+			        echo "构建完成"
+			        ;;
+			
+			    "d" | "D" | "delete" | "Delete")
+			        docker rmi $image_id
+			        echo "删除完成"
+			        ;;
+			
+			    *)
+			        echo "未知操作，退出"
+			        ;;
+			esac
+	     ;;
 	     0)
 	     	break
      	;;
@@ -298,9 +345,9 @@ function htm5_s(){
 
 function ptbox_m(){
 		clear
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo "QuickBox Lite安装"
-		echo "-------------------------------------------"
+		echo "--------------------------------------------------"
 		echo -n "用户名(默认Admin)："
 		read username
 		if [ -z "$username" ];then
@@ -333,101 +380,145 @@ function ptbox_m(){
 }
 
 function speed_limit(){
-	clear
-	echo "-------------------------------------------"
-	echo "网卡限速管理"
-	echo "-------------------------------------------"
-	echo "1、安装限速和监控插件"
-	echo "2、设置网卡限速"
-	echo "3、取消网卡限速"
-	echo "4、查看网卡监控"
-	echo "0、返回主菜单"
-	echo "-------------------------------------------"
-	echo -n "请选择："
-	read aNum2
-	case $aNum2 in
-	1)
-	case $OS_type in
-	    Debian)
-	        apt-get update
-	        sudo apt-get install make ethstatus
-	        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
-	        ln /usr/local/sbin/wondershaper /sbin/wondershaper
-	        echo "安装完成，按任意键继续!"
-		   char=`get_char`
-	        ;;
-	    CentOS)
-	        sudo yum install epel-release make ethstatus
-	        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
-	        echo "安装完成，按任意键继续!"
-		   char=`get_char`
-	        ;;
-	    *)
-	        echo "不支持此系统请尝试手动安装 wondershaper"
-	        ;;
-	esac
-	;;
-	2) echo "-------------------------------------------"
-		echo -n "网卡名称："
-		read dev_name
-		echo -n "上行速率(kbps，留空不限制)："
-		read up_speed
-		echo -n "下线速率(kbps，留空不限制)："
-		read down_speed
-		systemctl enable wondershaper.service
-		wondershaper -c -a ${dev_name}
-		if [ -n "$up_speed" ] && [ -n "$down_speed" ];then
-			wondershaper -a ${dev_name} -d ${down_speed} -u ${up_speed}
-		elif [ -n "$up_speed" ];then
-			wondershaper -a ${dev_name} -u ${up_speed}
-		elif [ -n "$up_speed" ];then
-			wondershaper -a ${dev_name} -d ${down_speed}
-		else
-			echo "无限速"
-		fi
-		echo "限速完成。按任意键继续"
-		char=`get_char`
-	;;
-	3) echo "-------------------------------------------"
-		echo -n "网卡名称："
-		read dev_name
-		wondershaper -c -a ${dev_name}
-		systemctl disable wondershaper.service
-		echo "取消限速完成。按任意键继续"
-		char=`get_char`
-	;; 
-	4) echo "-------------------------------------------"
-		echo -n "网卡名称："
-		read dev_name
-		ethstatus -i ${dev_name}
-	;;
-	0) break
-	;;
-	*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
-     	sleep 2
-     ;;
-	esac
+	while true
+	do
+			clear
+			echo "--------------------------------------------------"
+			echo "网卡限速管理"
+			echo "--------------------------------------------------"
+			echo "1、安装限速和监控插件"
+			echo "2、设置网卡限速"
+			echo "3、取消网卡限速"
+			echo "4、查看网卡监控"
+			echo "0、返回主菜单"
+			echo "--------------------------------------------------"
+			echo -n "请选择："
+			read aNum2
+			case $aNum2 in
+			1)
+				case $OS_type in
+				    Debian)
+				        apt-get update
+				        sudo apt-get install make ethstatus
+				        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
+				        ln /usr/local/sbin/wondershaper /sbin/wondershaper
+				        echo "安装完成，按任意键继续!"
+					   char=`get_char`
+				        ;;
+				    CentOS)
+				        yum install epel-release make ethstatus
+				        git clone https://github.com/magnific0/wondershaper.git  && cd wondershaper && sudo make install ; cd .. && rm -rf wondershaper
+				        echo "安装完成，按任意键继续!"
+					   char=`get_char`
+				        ;;
+				    *)
+				        echo "不支持此系统请尝试手动安装 wondershaper"
+				        ;;
+				esac
+			;;
+			2) echo "--------------------------------------------------"
+				echo -n "网卡名称："
+				read dev_name
+				echo -n "上行速率(kbps，留空不限制)："
+				read up_speed
+				echo -n "下线速率(kbps，留空不限制)："
+				read down_speed
+				wondershaper -c -a ${dev_name}
+				if [ -n "$up_speed" ] && [ -n "$down_speed" ];then
+					wondershaper -a ${dev_name} -d ${down_speed} -u ${up_speed}
+				elif [ -n "$up_speed" ];then
+					wondershaper -a ${dev_name} -u ${up_speed}
+				elif [ -n "$up_speed" ];then
+					wondershaper -a ${dev_name} -d ${down_speed}
+				else
+					echo "无限速"
+				fi
+				echo "限速完成。按任意键继续"
+				char=`get_char`
+			;;
+			3) echo "--------------------------------------------------"
+				echo -n "网卡名称："
+				read dev_name
+				wondershaper -c -a ${dev_name}
+				echo "限速完成。按任意键继续"
+				char=`get_char`
+			;; 
+			4) echo "--------------------------------------------------"
+				echo -n "网卡名称："
+				read dev_name
+				ethstatus -i ${dev_name}
+			;;
+			0) break
+			;;
+			*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+		     	sleep 2
+		     ;;
+			esac
+	done
+}
+
+function clean_log(){
+	while true
+	do
+		clear
+		echo "--------------------------------------------------"
+		echo "日志文件清理"
+		echo "--------------------------------------------------"
+		echo "1、Docker日志清理"
+		echo "2、系统日志清理"
+		echo "0、返回主菜单"
+		echo "--------------------------------------------------"
+		echo -n "请选择："
+		read aNum2
+		case $aNum2 in
+		1)	echo "--------------------------------------------------"
+			d_logs=$(find /var/lib/docker/containers/ -name *-json.log)  
+			for log in $d_logs  
+			        do  
+			                echo "clean logs : $log"  
+			                cat /dev/null > $log  
+			        done 
+			echo "清理完成。按任意键继续"
+			char=`get_char`
+		;;
+		2) 	echo "--------------------------------------------------"
+			echo -n "设置日志过期时间(单位:d)："
+			read c_time
+			echo -n "设置日志文件大小(单位:M)："
+			read l_size
+			if [ -n "$c_time" ] && [ -n "$l_size" ];then
+				journalctl --vacuum-time=${c_time}d && journalctl --vacuum-size=${l_size}M && systemctl restart systemd-journald.service
+				echo "清理完成。按任意键继续"
+				char=`get_char`
+			else 
+				echo "请输入所有参数。按任意键继续"
+				char=`get_char`
+			fi
+		;;
+		0) break
+		;;
+		*)  echo -e "${Font_Red}输入错误，请重新输入${Font_Suffix}"
+     		sleep 2
+     	;;
+		esac
+	done
 }
 
 
 function menu(){
 	clear
-	echo "-------------------------------------------"
-	echo "Af_Box 常用脚本工具箱 v0.0.3"
-	echo "-------------------------------------------"
-	echo "1、BBR加速管理 By blog.ylx.me"
-	echo "2、服务器各项测试"
-	echo "3、Docker管理"
-	echo "4、哪吒探针管理 By naiba"
-	echo "5、Warp管理 By fscarmen"
-	echo "6、Html5 Speedtest 安装"
-	echo "7、Alist 安装"
-	echo "8、QuickBox Lite（PT盒子） 安装"
-	echo "9、网卡限速管理"
+	echo "--------------------------------------------------"
+	echo "Af_Box 常用脚本工具箱 v0.0.4"
+	echo "--------------------------------------------------"
+	printf "%-32s %s\n" "1、BBR管理" "2、服务器测试"
+	printf "%-32s %s\n" "3、Docker管理" "4、哪吒探针管理"
+	printf "%-32s %s\n" "5、Warp管理" "6、网卡限速管理"
+	printf "%-32s %s\n" "7、Alist安装" "8、QuickBox_Lite安装"
+	printf "%-32s %s\n" "9、Html5_Speedtest安装" "10、日志文件清理"
 	echo "0、退出脚本"
-	echo "-------------------------------------------"
+	echo "--------------------------------------------------"
 	echo "若中途有输入错误，按ctrl+backspace删除"
-	echo "-------------------------------------------"
+	echo "--------------------------------------------------"
 }
 
 # ====================================================
@@ -454,14 +545,16 @@ do
      ;;
      5)  warp_m
      ;;
-     6)  htm5_s
+     6)  speed_limit
      ;;
      7)  curl -fsSL "https://alist.nn.ci/v2.sh" | bash -s install
      ;;
      8)  ptbox_m
      ;;
-     9) speed_limit
+     9)  htm5_s
      ;;
+	10) clean_log
+	;;
      0)  echo "用户选择退出"
 	     break
      ;;
