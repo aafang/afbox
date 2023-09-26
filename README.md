@@ -12,18 +12,20 @@
 7. 一键安装Alist
 8. 一键安装QuickBox Lite
 9. 网卡限速
+10. 日志文件清理
 ## 使用
 ```
 bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 ```
 在使用网卡限速功能时，先使用```ip a```或```ifconfig```查看网卡名称
 ## 更新日志
+- 2023年9月26日：修改主菜单布局，增加日志文件清理功能，增加docker镜像管理
 - 2023年9月24日：增加网卡限速功能，基于 wondershaper
 - 2023年9月24日：增加alist，QuickBox Lite
 - 2023年9月23日：首个版本发布
 ## 基本界面展示
 - 主菜单  
-![image](https://github.com/aafang/afbox/assets/145802153/70b379b4-343b-4505-868b-e3bfd23ca8d3)
+![image](https://github.com/aafang/afbox/assets/145802153/1003c57c-2e58-4a3e-8cad-e1f8ef3cdacf)  
 - BB加速管理  
 ![image](https://github.com/aafang/afbox/assets/145802153/1cdf8044-f52b-4d6a-93ad-999ed95e1b4d)
 - 服务器各项测试  
@@ -40,6 +42,8 @@ bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 ![128bb6f3b5a460f74ea20d908ffc7ba](https://github.com/aafang/afbox/assets/145802153/bf1bb521-a3e0-43e7-932f-2b1ae28fe841)  
 解除后  
 ![image](https://github.com/aafang/afbox/assets/145802153/bc874578-b1e0-4c3d-a5d7-25a5da08fb10)
+- 日志文件清理  
+![image](https://github.com/aafang/afbox/assets/145802153/375aef17-2141-4e31-82ed-0ff2f2547a49)
 - 其他
 哪吒探针，warp，html5 speedtest，Alist均是调用了其他脚本，故不作展示
 ## 鸣谢
