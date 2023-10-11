@@ -62,4 +62,4 @@ bash <(curl -sL https://raw.githubusercontent.com/aafang/afbox/main/afbox.sh)
 12. QuickBox Lite - [项目地址](https://wiki.ptbox.dev/zh-Hans/)
 13. wondershaper - [项目地址](https://github.com/magnific0/wondershaper)
 ## 交流
-[阿方的测评](https://t.me/afangcp)
+[阿方的频道](https://t.me/afangcp)
